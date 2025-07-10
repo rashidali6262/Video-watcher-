@@ -214,89 +214,7 @@
     </div>  
   </div>  
 
-<!-- ✅ EmailJS library added -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-  emailjs.init("4olTZxiOxAHKbysTd");
-</script>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    fetchSignInMethodsForEmail
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc
-  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyAjC2opLqcaaRACpT_FcrnOsysH-7E7PK8",
-    authDomain: "referral-id-3772a.firebaseapp.com",
-    projectId: "referral-id-3772a",
-    storageBucket: "referral-id-3772a.appspot.com",
-    messagingSenderId: "74576834293",
-    appId: "1:74576834293:web:4a3e35b1f3ba2d78b61fbc",
-    measurementId: "G-EELB1J45HD"
-  };
-  
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  
-  // DOM Elements
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const confirmPasswordInput = document.getElementById("confirmPassword");
-  const countryInput = document.getElementById("country");
-  const verificationCode = document.getElementById("verificationCode");
-  const sendCodeBtn = document.getElementById("sendCodeBtn");
-  const registerBtn = document.getElementById("registerBtn");
-  const passwordError = document.getElementById("passwordError");
-  const togglePassword = document.getElementById("togglePassword");
-  const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
-  
-  let otpCode = "";
-  let otpSent = false;
-  
-  // Password toggle
-  let passwordVisible = false;
-  togglePassword.addEventListener("click", () => {
-    passwordVisible = !passwordVisible;
-    passwordInput.type = passwordVisible ? "text" : "password";
-    togglePassword.src = passwordVisible ? "/eye2.png" : "/eye1.png";
-  });
-  
-  let confirmPasswordVisible = false;
-  toggleConfirmPassword.addEventListener("click", () => {
-    confirmPasswordVisible = !confirmPasswordVisible;
-    confirmPasswordInput.type = confirmPasswordVisible ? "text" : "password";
-    toggleConfirmPassword.src = confirmPasswordVisible ? "/eye2.png" : "/eye1.png";
-  });
-  
-  // Referral numeric only
-  const params = new URLSearchParams(window.location.search);
-  const ref = params.get("ref");
-  if (ref && /^\d+$/.test(ref)) {
-    document.getElementById("refText").innerText = ref;
-    document.getElementById("referralInput").value = ref;
-    document.getElementById("referralSection").style.display = "block";
-  }
-  
-  // Add password mismatch error
-  const mismatchError = document.createElement("div");
-  mismatchError.id = "passwordMismatchError";
-  mismatchError.style.color = "#C71515";
-  mismatchError.style.fontSize = "0.8em";
-  mismatchError.style.display = "none";
-  mismatchError.style.marginLeft = "-10px";
-  mismatchError.style.marginTop = "3px";
 <!-- ... [Aapka pura HTML as it is] ... -->
 
 <!-- ✅ EmailJS library added -->
@@ -353,14 +271,14 @@ let passwordVisible = false;
 togglePassword.addEventListener("click", () => {
   passwordVisible = !passwordVisible;
   passwordInput.type = passwordVisible ? "text" : "password";
-  togglePassword.src = passwordVisible ? "/images/eye2.png" : "/images/eye1.png";
+  togglePassword.src = passwordVisible ? "/eye2.png" : "/eye1.png";
 });
 
 let confirmPasswordVisible = false;
 toggleConfirmPassword.addEventListener("click", () => {
   confirmPasswordVisible = !confirmPasswordVisible;
   confirmPasswordInput.type = confirmPasswordVisible ? "text" : "password";
-  toggleConfirmPassword.src = confirmPasswordVisible ? "/images/eye2.png" : "/images/eye1.png";
+  toggleConfirmPassword.src = confirmPasswordVisible ? "/eye2.png" : "/eye1.png";
 });
 
 // Referral numeric only
