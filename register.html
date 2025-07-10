@@ -164,7 +164,7 @@
 <body>  
   <div class="header-bar">Sign up</div>  
   <div class="container">  
-    <img src="/images/banner.png" alt="Banner" class="banner-image" />  
+    <img src="/banner.png" alt="Banner" class="banner-image" />  
     <h2>Create new Account</h2>  
 
     <div id="referralSection" style="display: none;">  
@@ -184,13 +184,13 @@
     <label for="password">Password</label>  
     <div class="password-wrapper">  
       <input type="password" id="password" placeholder="Enter password" />  
-      <img src="/images/eye1.png" id="togglePassword" class="eye-icon" />  
+      <img src="/eye1.png" id="togglePassword" class="eye-icon" />  
     </div>  
 
     <label for="confirmPassword">Confirm Password</label>  
     <div class="password-wrapper">  
       <input type="password" id="confirmPassword" placeholder="Confirm password" />  
-      <img src="/images/eye1.png" id="toggleConfirmPassword" class="eye-icon" />  
+      <img src="/eye1.png" id="toggleConfirmPassword" class="eye-icon" />  
     </div>  
 
     <div id="passwordError">Password must be at least 6 characters</div>  
@@ -265,14 +265,14 @@
   togglePassword.addEventListener("click", () => {
     passwordVisible = !passwordVisible;
     passwordInput.type = passwordVisible ? "text" : "password";
-    togglePassword.src = passwordVisible ? "/images/eye2.png" : "/images/eye1.png";
+    togglePassword.src = passwordVisible ? "/eye2.png" : "/eye1.png";
   });
   
   let confirmPasswordVisible = false;
   toggleConfirmPassword.addEventListener("click", () => {
     confirmPasswordVisible = !confirmPasswordVisible;
     confirmPasswordInput.type = confirmPasswordVisible ? "text" : "password";
-    toggleConfirmPassword.src = confirmPasswordVisible ? "/images/eye2.png" : "/images/eye1.png";
+    toggleConfirmPassword.src = confirmPasswordVisible ? "/eye2.png" : "/eye1.png";
   });
   
   // Referral numeric only
