@@ -29,7 +29,21 @@
       padding: 5px 0;  
       z-index: 1000;  
     }
-
+.back-button {
+      position: absolute;
+      left: -130px;
+      top: -6px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #5965A4;
+      -webkit-tap-highlight-color: transparent
+    }
+    .back-button:focus {
+  outline: none;
+  border: none;
+    }
     .container {  
       max-width: 400px;  
       margin-top: 60px;  
@@ -167,7 +181,9 @@
   </style>  
 </head>  
 <body>  
-  <div class="header-bar">Sign up</div>  
+  <div class="header-bar">
+    <button class="back-button" onclick="history.back()">< Back</button>
+    Sign up</div>  
   <div class="container">  
     <img src="/banner.png" alt="Banner" class="banner-image" />  
     <h2>Create new Account</h2>  
