@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <style>
+      * {
+      font-family: 'Georgia', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      font-family: 'Georgia';
+      background-color: #A80D32;
+      direction: ltr;
+    }
+
+    .header-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ccc;
+      color: #5965A4;
+      font-size: 1.5em;
+      margin: 0;
+      padding: 5px 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-button {
+      position: absolute;
+      left: -130px;
+      top: -6px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #5965A4;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    .container {
+      max-width: 400px;
+      margin-top: 60px;
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+    }
+
+    .banner-image {
+      width: 70%;
+      border-radius: 10px;
+      margin-left: 15%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .register {
+      text-align: center;
+      -webkit-tap-highlight-color: transparent
+    }
+    .signup-link {
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .eye-icon {
+      position: absolute;
+      top: 57%;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-left: -10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #D1D2DD;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border: 1px solid #ccc;
+    }
+
+    #loginBtn {
+      background-color: #888;
+      color: white;
+      border: none;
+      margin: 20px auto 0 auto;
+      cursor: not-allowed;
+      width: 200px;
+      display: block;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #loginBtn.enabled {
+      background-color: #A80D32;
+      cursor: pointer;
+    }
+
+    .bottom-line {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #888;
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      word-spacing: 5px;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    #passwordError {
+      color: #C71515;
+      font-size: 0.8em;
+      display: none;
+      margin-left: -10px;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <button class="back-button" onclick="history.back()">< Back</button>
+    Login
+  </div>
+
+  <div class="container">
+    <img src="/images/banner.png" alt="Banner" class="banner-image" />
+    <h2>Welcome back.</h2>
+    
+    <div class="register">
+      Don't have an account? <a href="register.html" class="signup-link">Sign Up&gt;</a>
+    </div>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="@gmail.com" />
+
+    <div class="password-container">
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Enter password" />
+        <img src="/images/eye1.png" id="togglePassword" class="eye-icon" />
+      </div>
+      <div id="passwordError">Password must be at least 6 characters</div>
+    </div>
+
+    <button id="loginBtn" disabled>Login</button>
+
+    <div class="bottom-line">
+      Forgot password? <a href="forgot.html" class="signup-link">Forgot</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAjC2opLqcaaRACpT_FcrnOsysH-7E7PK8",
+      authDomain: "referral-id-3772a.firebaseapp.com",
+      projectId: "referral-id-3772a",
+      storageBucket: "referral-id-3772a.appspot.com",
+      messagingSenderId: "74576834293",
+      appId: "1:74576834293:web:4a3e35b1f3ba2d78b61fbc",
+      measurementId: "G-EELB1J45HD"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const emailInput = document.getElementById("email");
+    const passwordError = document.getElementById("passwordError");
+
+    let passwordVisible = false;
+
+    togglePassword.addEventListener("click", () => {
+      passwordVisible = !passwordVisible;
+      passwordInput.type = passwordVisible ? "text" : "password";
+      togglePassword.src = passwordVisible ? "/images/eye2.png" : "/images/eye1.png";
+    });
+
+    function validateForm() {
+      const emailFilled = emailInput.value.trim() !== "";
+      const passwordLength = passwordInput.value.trim().length;
+      const passwordValid = passwordLength >= 6;
+
+      if (passwordLength > 0 && !passwordValid) {
+        passwordError.style.display = "block";
+      } else {
+        passwordError.style.display = "none";
+      }
+
+      if (emailFilled && passwordValid) {
+        loginBtn.classList.add("enabled");
+        loginBtn.disabled = false;
+        loginBtn.style.cursor = "pointer";
+      } else {
+        loginBtn.classList.remove("enabled");
+        loginBtn.disabled = true;
+        loginBtn.style.cursor = "not-allowed";
+      }
+    }
+
+    emailInput.addEventListener("input", validateForm);
+    passwordInput.addEventListener("input", validateForm);
+
+    loginBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      const originalText = loginBtn.textContent;
+      loginBtn.textContent = "Logging in...";
+      loginBtn.disabled = true;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        if (!user.emailVerified) {
+          alert("Please verify your email before logging in.");
+          loginBtn.textContent = originalText;
+          loginBtn.disabled = false;
+          return;
+        }
+
+        localStorage.setItem("userEmail", email);
+        window.location.href = "index.html";
+
+      } catch (error) {
+        if (error.code === "auth/user-not-found") {
+          alert("Account does not exist. Please register first.");
+        } else if (error.code === "auth/wrong-password") {
+          alert("Incorrect password.");
+        } else if (error.code === "auth/invalid-email") {
+          alert("Invalid email address.");
+        } else {
+          alert("Login failed: " + error.message);
+        }
+
+        loginBtn.textContent = originalText;
+        loginBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
