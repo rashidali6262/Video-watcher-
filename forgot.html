@@ -180,7 +180,7 @@
   </div>
 
   <div class="container">
-    <img src="/images/banner.png" alt="Banner" class="banner-image" />
+    <img src="/banner.png" alt="Banner" class="banner-image" />
     <h2>Forgot Password</h2>
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="@gmail.com" />
@@ -188,13 +188,13 @@
     <label for="password">Password</label>
     <div class="password-wrapper">
       <input type="password" id="password" placeholder="Enter password" />
-      <img src="/images/eye1.png" id="togglePassword" class="eye-icon" />
+      <img src="/eye1.png" id="togglePassword" class="eye-icon" />
     </div>
 
     <label for="confirmPassword">Confirm Password</label>
     <div class="password-wrapper">
       <input type="password" id="confirmPassword" placeholder="Confirm password" />
-      <img src="/images/eye1.png" id="toggleConfirmPassword" class="eye-icon" />
+      <img src="/eye1.png" id="toggleConfirmPassword" class="eye-icon" />
     </div>
 
     <label for="verificationCode">Email Verification Code</label>
@@ -235,13 +235,13 @@
     togglePassword.addEventListener("click", () => {
       const isText = passwordInput.type === "text";
       passwordInput.type = isText ? "password" : "text";
-      togglePassword.src = isText ? "/images/eye1.png" : "/images/eye2.png";
+      togglePassword.src = isText ? "/eye1.png" : "/eye2.png";
     });
 
     toggleConfirmPassword.addEventListener("click", () => {
       const isText = confirmPasswordInput.type === "text";
       confirmPasswordInput.type = isText ? "password" : "text";
-      toggleConfirmPassword.src = isText ? "/images/eye1.png" : "/images/eye2.png";
+      toggleConfirmPassword.src = isText ? "/eye1.png" : "/eye2.png";
     });
 
     emailInput.addEventListener("input", () => {
