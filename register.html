@@ -29,7 +29,7 @@
       padding: 5px 0;  
       z-index: 1000;  
     }
-.back-button {
+    .back-button {
       position: absolute;
       left: -130px;
       top: -6px;
@@ -39,10 +39,6 @@
       cursor: pointer;
       color: #5965A4;
       -webkit-tap-highlight-color: transparent
-    }
-    .back-button:focus {
-  outline: none;
-  border: none;
     }
     .container {  
       max-width: 400px;  
@@ -110,7 +106,6 @@
       outline: none;
       border: 1px solid #ccc;
     }
-
     #registerBtn {  
       background-color: #888;  
       color: white;  
@@ -185,7 +180,7 @@
     <button class="back-button" onclick="history.back()">< Back</button>
     Sign up</div>  
   <div class="container">  
-    <img src="/banner.png" alt="Banner" class="banner-image" />  
+    <img src="/images/banner.png" alt="Banner" class="banner-image" />  
     <h2>Create new Account</h2>  
 
     <div id="referralSection" style="display: none;">  
@@ -205,13 +200,13 @@
     <label for="password">Password</label>  
     <div class="password-wrapper">  
       <input type="password" id="password" placeholder="Enter password" />  
-      <img src="/eye1.png" id="togglePassword" class="eye-icon" />  
+      <img src="/images/eye1.png" id="togglePassword" class="eye-icon" />  
     </div>  
 
     <label for="confirmPassword">Confirm Password</label>  
     <div class="password-wrapper">  
       <input type="password" id="confirmPassword" placeholder="Confirm password" />  
-      <img src="/eye1.png" id="toggleConfirmPassword" class="eye-icon" />  
+      <img src="/images/eye1.png" id="toggleConfirmPassword" class="eye-icon" />  
     </div>  
 
     <div id="passwordError">Password must be at least 6 characters</div>  
@@ -230,7 +225,6 @@
     </div>  
   </div>  
 
-
 <!-- ... [Aapka pura HTML as it is] ... -->
 
 <!-- ✅ EmailJS library added -->
@@ -240,168 +234,168 @@
 </script>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  sendEmailVerification
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-import {
-  getFirestore,
-  collection,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAjC2opLqcaaRACpT_FcrnOsysH-7E7PK8",
-  authDomain: "referral-id-3772a.firebaseapp.com",
-  projectId: "referral-id-3772a",
-  storageBucket: "referral-id-3772a.appspot.com",
-  messagingSenderId: "74576834293",
-  appId: "1:74576834293:web:4a3e35b1f3ba2d78b61fbc",
-  measurementId: "G-EELB1J45HD"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// DOM Elements
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const confirmPasswordInput = document.getElementById("confirmPassword");
-const countryInput = document.getElementById("country");
-const verificationCode = document.getElementById("verificationCode");
-const sendCodeBtn = document.getElementById("sendCodeBtn");
-const registerBtn = document.getElementById("registerBtn");
-const passwordError = document.getElementById("passwordError");
-const togglePassword = document.getElementById("togglePassword");
-const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
-
-let otpCode = "";
-
-// Password toggle
-let passwordVisible = false;
-togglePassword.addEventListener("click", () => {
-  passwordVisible = !passwordVisible;
-  passwordInput.type = passwordVisible ? "text" : "password";
-  togglePassword.src = passwordVisible ? "/eye2.png" : "/eye1.png";
-});
-
-let confirmPasswordVisible = false;
-toggleConfirmPassword.addEventListener("click", () => {
-  confirmPasswordVisible = !confirmPasswordVisible;
-  confirmPasswordInput.type = confirmPasswordVisible ? "text" : "password";
-  toggleConfirmPassword.src = confirmPasswordVisible ? "/eye2.png" : "/eye1.png";
-});
-
-// Referral numeric only
-const params = new URLSearchParams(window.location.search);
-const ref = params.get("ref");
-if (ref && /^\d+$/.test(ref)) {
-  document.getElementById("refText").innerText = ref;
-  document.getElementById("referralInput").value = ref;
-  document.getElementById("referralSection").style.display = "block";
-}
-
-// Validate form
-function validateForm() {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  const confirmPassword = confirmPasswordInput.value.trim();
-  const code = verificationCode.value.trim();
-  const country = countryInput.value;
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const allFilled = email && password && confirmPassword && code && country;
-  const isPasswordValid = password.length >= 6;
-  const isMatch = password === confirmPassword;
-  const isCodeValid = code === otpCode;
-
-  passwordError.style.display = (password.length > 0 && !isPasswordValid) ? "block" : "none";
-  sendCodeBtn.disabled = !isEmailValid;
-  sendCodeBtn.classList.toggle("active", isEmailValid);
-
-  const formValid = allFilled && isPasswordValid && isMatch && isCodeValid;
-  registerBtn.disabled = !formValid;
-  registerBtn.classList.toggle("enabled", formValid);
-  registerBtn.style.cursor = registerBtn.disabled ? "not-allowed" : "pointer";
-}
-
-[emailInput, passwordInput, confirmPasswordInput, verificationCode, countryInput].forEach(input => {
-  input.addEventListener("input", validateForm);
-});
-
-// ✅ EmailJS OTP Send + Timer + Disable logic
-sendCodeBtn.addEventListener("click", () => {
-  const email = emailInput.value.trim();
-  otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-  sendCodeBtn.disabled = true;
-  sendCodeBtn.classList.remove("active");
-  sendCodeBtn.textContent = "Sending...";
-
-  emailjs.send("service_tsq6gdn", "template_47t3r9u", {
-    to_email: email,
-    code: otpCode
-  }, "4olTZxiOxAHKbysTd")
-  .then(() => {
-    alert("OTP sent to your email.");
-
-    let timeLeft = 120;
-    sendCodeBtn.textContent = `${timeLeft}s`;
-
-    const countdown = setInterval(() => {
-      timeLeft--;
-      sendCodeBtn.textContent = timeLeft > 0 ? `${timeLeft}s` : "Send Code";
-
-      if (timeLeft <= 0) {
-        clearInterval(countdown);
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    sendEmailVerification
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjC2opLqcaaRACpT_FcrnOsysH-7E7PK8",
+    authDomain: "referral-id-3772a.firebaseapp.com",
+    projectId: "referral-id-3772a",
+    storageBucket: "referral-id-3772a.appspot.com",
+    messagingSenderId: "74576834293",
+    appId: "1:74576834293:web:4a3e35b1f3ba2d78b61fbc",
+    measurementId: "G-EELB1J45HD"
+  };
+  
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  
+  // DOM Elements
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
+  const countryInput = document.getElementById("country");
+  const verificationCode = document.getElementById("verificationCode");
+  const sendCodeBtn = document.getElementById("sendCodeBtn");
+  const registerBtn = document.getElementById("registerBtn");
+  const passwordError = document.getElementById("passwordError");
+  const togglePassword = document.getElementById("togglePassword");
+  const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+  
+  let otpCode = "";
+  
+  // Password toggle
+  let passwordVisible = false;
+  togglePassword.addEventListener("click", () => {
+    passwordVisible = !passwordVisible;
+    passwordInput.type = passwordVisible ? "text" : "password";
+    togglePassword.src = passwordVisible ? "/images/eye2.png" : "/images/eye1.png";
+  });
+  
+  let confirmPasswordVisible = false;
+  toggleConfirmPassword.addEventListener("click", () => {
+    confirmPasswordVisible = !confirmPasswordVisible;
+    confirmPasswordInput.type = confirmPasswordVisible ? "text" : "password";
+    toggleConfirmPassword.src = confirmPasswordVisible ? "/images/eye2.png" : "/images/eye1.png";
+  });
+  
+  // Referral numeric only
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get("ref");
+  if (ref && /^\d+$/.test(ref)) {
+    document.getElementById("refText").innerText = ref;
+    document.getElementById("referralInput").value = ref;
+    document.getElementById("referralSection").style.display = "block";
+  }
+  
+  // Validate form
+  function validateForm() {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const confirmPassword = confirmPasswordInput.value.trim();
+    const code = verificationCode.value.trim();
+    const country = countryInput.value;
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const allFilled = email && password && confirmPassword && code && country;
+    const isPasswordValid = password.length >= 6;
+    const isMatch = password === confirmPassword;
+    const isCodeValid = code === otpCode;
+    
+    passwordError.style.display = (password.length > 0 && !isPasswordValid) ? "block" : "none";
+    sendCodeBtn.disabled = !isEmailValid;
+    sendCodeBtn.classList.toggle("active", isEmailValid);
+    
+    const formValid = allFilled && isPasswordValid && isMatch && isCodeValid;
+    registerBtn.disabled = !formValid;
+    registerBtn.classList.toggle("enabled", formValid);
+    registerBtn.style.cursor = registerBtn.disabled ? "not-allowed" : "pointer";
+  }
+  
+  [emailInput, passwordInput, confirmPasswordInput, verificationCode, countryInput].forEach(input => {
+    input.addEventListener("input", validateForm);
+  });
+  
+  // ✅ EmailJS OTP Send + Timer + Disable logic
+  sendCodeBtn.addEventListener("click", () => {
+    const email = emailInput.value.trim();
+    otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    sendCodeBtn.disabled = true;
+    sendCodeBtn.classList.remove("active");
+    sendCodeBtn.textContent = "Sending...";
+    
+    emailjs.send("service_tsq6gdn", "template_47t3r9u", {
+        to_email: email,
+        code: otpCode
+      }, "4olTZxiOxAHKbysTd")
+      .then(() => {
+        alert("✅ OTP sent to your email.");
+        
+        let timeLeft = 120;
+        sendCodeBtn.textContent = `${timeLeft}s`;
+        
+        const countdown = setInterval(() => {
+          timeLeft--;
+          sendCodeBtn.textContent = timeLeft > 0 ? `${timeLeft}s` : "Send Code";
+          
+          if (timeLeft <= 0) {
+            clearInterval(countdown);
+            sendCodeBtn.disabled = false;
+            sendCodeBtn.classList.add("active");
+            sendCodeBtn.textContent = "Send Code";
+          }
+        }, 1000);
+      })
+      .catch((error) => {
+        alert("Failed to send code: " + error.text);
         sendCodeBtn.disabled = false;
         sendCodeBtn.classList.add("active");
         sendCodeBtn.textContent = "Send Code";
-      }
-    }, 1000);
-  })
-  .catch((error) => {
-    alert("Failed to send code: " + error.text);
-    sendCodeBtn.disabled = false;
-    sendCodeBtn.classList.add("active");
-    sendCodeBtn.textContent = "Send Code";
+      });
   });
-});
-
-// Firebase Registration
-registerBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  const refId = document.getElementById("referralInput").value || null;
-
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-
-    await sendEmailVerification(user);
-    alert("Verification email sent. Please check your Gmail.");
-
-    await addDoc(collection(db, "users"), {
-      email: email,
-      referralBy: refId,
-      uid: user.uid,
-      createdAt: new Date()
-    });
-
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("referralBy", refId || "");
-
-    window.location.href = "index.html";
-  } catch (error) {
-    alert("Registration error: " + error.message);
-  }
-});
-
-validateForm();
+  
+  // Firebase Registration
+  registerBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const refId = document.getElementById("referralInput").value || null;
+    
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      await sendEmailVerification(user);
+      alert("Verification email sent. Please check your Gmail.");
+      
+      await addDoc(collection(db, "users"), {
+        email: email,
+        referralBy: refId,
+        uid: user.uid,
+        createdAt: new Date()
+      });
+      
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("referralBy", refId || "");
+      
+      window.location.href = "index.html";
+    } catch (error) {
+      alert("Registration error: " + error.message);
+    }
+  });
+  
+  validateForm();
 </script>
 </body>  
-</html>
+    </html>
