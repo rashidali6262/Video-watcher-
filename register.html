@@ -336,7 +336,7 @@
       const user = userCredential.user;
 
       // ✅ Generate referral code from UID
-      const referralCode = user.uid.slice(0, 8);
+      const referralCode = Math.floor(10000000 + Math.random() * 90000000).toString();
       localStorage.setItem("referral_code", referralCode);
 
       await sendEmailVerification(user);
