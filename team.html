@@ -380,8 +380,7 @@
   
   if (referralCode) {
     const usersRef = collection(db, "users");
-    const q = query(usersRef, where("referrer", "==", referralCode), orderBy("createdAt", "desc"));
-    
+    const q = query(usersRef, where("referralBy", "==", referralCode), orderBy("createdAt", "desc"));
     getDocs(q)
       .then(snapshot => {
         if (snapshot.empty) {
