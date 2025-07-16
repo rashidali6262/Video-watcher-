@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      * {
+      font-family: 'Georgia', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      font-family: 'Georgia', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding-bottom: 70px;
+      background: #f4f4f4;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 45px;
+      background-color: #A80D32;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: 400;
+      z-index: 1000;
+    }
+
+    .color-sheet {
+      margin-top: 45px;
+      width: 100%;
+      height: 220px;
+      background-color: #A80D32;
+      z-index: 998;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      position: relative;
+    }
+
+    .bonus {
+      margin-bottom: 30px;
+    }
+
+    .bonus p {
+      margin: 5px 0;
+      font-size: 22px;
+    }
+
+    .color-sheet .bonus .reward {
+      font-size: 28px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .action-row {
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 15px 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin: -50px 10px 15px;
+      border-radius: 10px;
+      position: relative;
+      z-index: 999;
+    }
+
+    .action-box {
+      flex: 1;
+    }
+
+    .action-box i {
+      font-size: 26px;
+      color: #A80D32;
+      margin-bottom: 5px;
+    }
+
+    .action-box p {
+      font-size: 14px;
+      color: #333;
+      margin: 5px 0 0;
+    }
+
+    .box {
+      background-color: white;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .box textarea {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #A80D32;
+      border-radius: 6px;
+      font-size: 14px;
+      margin-left: -6px;
+      margin-bottom: 10px;
+    }
+.box textarea:focus {
+  outline: none;
+  border: 1px solid #A80D32;
+}
+    .copy-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #A80D32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .whatsapp-button {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      -webkit-tap-highlight-color: transparent;
+      z-index: 9999;
+    }
+
+    .whatsapp-button img {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      border-radius: 50%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 -2px 6px rgba(1);
+      z-index: 1000;
+      height: 50px;
+    }
+
+    .bottom-nav a {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      color: #777;
+      font-size: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .bottom-nav a i {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
+      transition: transform 0.3s;
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a.active {
+      color: #A80D32;
+      font-weight: bold;
+    }
+
+    .bottom-nav a:hover i {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h5>Invite</h5>
+  </header>
+
+  <!-- Color Sheet -->
+  <div class="color-sheet">
+    <div class="bonus">
+      <p>Invite friends to join Video Wa</p>
+      <p>Joining 1 person, you will get</p>
+      <div class="reward">20% Reward</div>
+    </div>
+  </div>
+
+  <!-- Action Row -->
+  <div class="action-row">
+    <div class="action-box">
+      <i class="fas fa-share-alt"></i>
+      <p>Share with friends</p>
+    </div>
+    <div class="action-box">
+      <i class="fas fa-user-plus"></i>
+      <p>Register</p>
+    </div>
+    <div class="action-box">
+      <i class="fas fa-dollar-sign"></i>
+      <p>Claim rewards</p>
+    </div>
+  </div>
+
+  <!-- Referral Link Box -->
+  <div class="box">
+    <textarea id="refLink" rows="2" readonly></textarea>
+    <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
+  </div>
+
+  <!-- 👇 Earning Information Box -->
+  <div class="box">
+    <h3 style="color: #A80D32; margin-top: 0;">🎥 Watch Videos & Earn!</h3>
+    <p><strong>💰 Earn Rs. 5</strong> for every video you watch — instantly!</p>
+    <p><strong>🤝 Get 20% Referral Bonus</strong> from your friend's video earnings.</p>
+    <p>Example: If your friend earns Rs. 500, <strong>you get Rs. 100!</strong></p>
+    <p style="color: #A80D32;">Keep watching, keep inviting, keep earning!</p>
+  </div>
+
+  <a href="https://whatsapp.com/channel/0029Vb62XUS3wtbDKgcVe41q" target="_blank" class="whatsapp-button">
+    <img src="/Hi/download (3).png" alt="Join WhatsApp Channel" />
+  </a>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="index.html">
+      <i class="fas fa-home"></i>
+      Home
+    </a>
+    <a href="task.html">
+      <i class="fas fa-tasks"></i>
+      Tasks
+    </a>
+    <a href="invite.html" class="active">
+      <i class="fas fa-user-plus"></i>
+      Invite
+    </a>
+    <a href="team.html">
+      <i class="fas fa-users"></i>
+      Team
+    </a>
+    <a href="me.html">
+      <i class="fas fa-user"></i>
+      Me
+    </a>
+  </div>
+
+  <!-- JS Script for Referral -->
+  <script>
+    // ✅ Use fixed domain to avoid fake or preview URLs
+    const baseDomain = "https://video-watcher-pi.vercel.app";
+    const userCode = localStorage.getItem("referral_code") || "12345678";
+    const referralLink = `${baseDomain}/register.html?ref=${userCode}`;
+    document.getElementById("refLink").value = referralLink;
+
+    // Copy button function
+    function copyToClipboard() {
+      const text = document.getElementById("refLink");
+      text.select();
+      text.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Referral link copied!");
+    }
+  </script>
+
+</body>
+</html>
