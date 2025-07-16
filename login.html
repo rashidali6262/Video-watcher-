@@ -42,10 +42,11 @@
       color: #5965A4;
       -webkit-tap-highlight-color: transparent
     }
-.back-button:focus {
-  outline: none;
-  border: none;
-}
+    .back-button:focus {
+      outline: none;
+      border: none;
+    }
+
     .container {
       max-width: 400px;
       margin-top: 60px;
@@ -153,7 +154,7 @@
   </div>
 
   <div class="container">
-    <img src="/banner.png" alt="Banner" class="banner-image" />
+    <img src="/images/banner.png" alt="Banner" class="banner-image" />
     <h2>Welcome back.</h2>
     
     <div class="register">
@@ -167,7 +168,7 @@
       <label for="password">Password</label>
       <div class="password-wrapper">
         <input type="password" id="password" placeholder="Enter password" />
-        <img src="/eye1.png" id="togglePassword" class="eye-icon" />
+        <img src="/images/eye1.png" id="togglePassword" class="eye-icon" />
       </div>
       <div id="passwordError">Password must be at least 6 characters</div>
     </div>
@@ -207,7 +208,7 @@
     togglePassword.addEventListener("click", () => {
       passwordVisible = !passwordVisible;
       passwordInput.type = passwordVisible ? "text" : "password";
-      togglePassword.src = passwordVisible ? "/eye2.png" : "/eye1.png";
+      togglePassword.src = passwordVisible ? "/images/eye2.png" : "/images/eye1.png";
     });
 
     function validateForm() {
@@ -247,15 +248,9 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        if (!user.emailVerified) {
-          alert("Please verify your email before logging in.");
-          loginBtn.textContent = originalText;
-          loginBtn.disabled = false;
-          return;
-        }
-
+        // ✅ Email verified check removed
         localStorage.setItem("userEmail", email);
-        window.location.href = "index.html";
+        window.location.href = "index.html"; // ✅ redirect after login
 
       } catch (error) {
         if (error.code === "auth/user-not-found") {
@@ -274,4 +269,4 @@
     });
   </script>
 </body>
-</html>
+    </html>
