@@ -213,12 +213,12 @@
 </script>
 
 <script type="module">
-  // Import Firebase SDKs
+  // Import Firebase SDK modules
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-  
-  // Firebase config
+  import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+  // Your Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAjC2opLqcaaRACpT_FcrnOsysH-7E7PK8",
     authDomain: "referral-id-3772a.firebaseapp.com",
@@ -228,115 +228,47 @@
     appId: "1:74576834293:web:4a3e35b1f3ba2d78b61fbc",
     measurementId: "G-EELB1J45HD"
   };
-  
+
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  
-  // 🔒 Prevent access to register page if already logged in
+
+  // ❗ If already logged in, show alert only (no redirect)
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      window.location.replace("index.html");
+      alert("You are already registered. Please login.");
+      // No redirect, user stays on register page
     }
   });
-  
-  // Referral ID from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const referralCode = urlParams.get('ref');
-  
-  // Form and Inputs
-  const form = document.querySelector("form");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const confirmPasswordInput = document.getElementById("confirmPassword");
-  const verificationCodeInput = document.getElementById("verificationCode");
-  const sendCodeButton = document.getElementById("sendCode");
-  const submitBtn = document.querySelector("button[type='submit']");
-  const messageBox = document.getElementById("message");
-  
-  let generatedCode = "";
-  
-  // Send verification code
-  sendCodeButton.addEventListener("click", function() {
-    const email = emailInput.value.trim();
-    if (!email) {
-      alert("Please enter your email before sending the code.");
-      return;
-    }
-    
-    generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
-    
-    emailjs.send("service_j1sks8o", "template_fsz8tli", {
-        to_email: email,
-        code: generatedCode
-      }, "L4DF8m1e0o4yIB2uh")
-      .then(() => {
-        alert("Verification code sent to your email.");
-        let seconds = 120;
-        sendCodeButton.disabled = true;
-        sendCodeButton.innerText = `Wait (${seconds}s)`;
-        const interval = setInterval(() => {
-          seconds--;
-          sendCodeButton.innerText = `Wait (${seconds}s)`;
-          if (seconds <= 0) {
-            clearInterval(interval);
-            sendCodeButton.disabled = false;
-            sendCodeButton.innerText = "Send Code";
-          }
-        }, 1000);
-      })
-      .catch((error) => {
-        console.error("EmailJS Error:", error);
-        alert("Failed to send code. Please try again.");
-      });
-  });
-  
-  // Form submit
-  form.addEventListener("submit", function(e) {
+
+  // ✅ Handle registration form submission
+  const form = document.getElementById("register-form");
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    const confirmPassword = confirmPasswordInput.value.trim();
-    const enteredCode = verificationCodeInput.value.trim();
-    
-    if (password !== confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
-    
-    if (enteredCode !== generatedCode) {
-      alert("Invalid verification code.");
-      return;
-    }
-    
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        await sendEmailVerification(user);
-        
-        const uid = user.uid;
-        const refCode = uid.slice(0, 6); // unique referral ID
-        localStorage.setItem("referralCode", refCode);
-        localStorage.setItem("email", email);
-        
-        // Save to Firestore
-        await setDoc(doc(db, "users", uid), {
-          email: email,
-          referralCode: refCode,
-          referredBy: referralCode || null,
-          createdAt: new Date().toISOString()
-        });
-        
-        alert("Registration successful. Redirecting to home...");
-        window.location.replace("index.html");
-      })
-      .catch((error) => {
-        console.error("Registration error:", error);
-        alert("Registration failed: " + error.message);
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const referralCode = user.uid.slice(0, 6);
+      localStorage.setItem("referralCode", referralCode);
+      localStorage.setItem("userEmail", email);
+
+      await setDoc(doc(db, "users", user.uid), {
+        email: email,
+        referralCode: referralCode
       });
+
+      alert("Registration successful!");
+      window.location.replace("index.html");
+    } catch (error) {
+      alert(error.message);
+    }
   });
-          </script>
+</script>
 </body>  
     </html>
