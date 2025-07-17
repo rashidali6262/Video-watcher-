@@ -213,12 +213,10 @@
 </script>
 
 <script type="module">
-  // Import Firebase SDK modules
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+  import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-  // Your Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAjC2opLqcaaRACpT_FcrnOsysH-7E7PK8",
     authDomain: "referral-id-3772a.firebaseapp.com",
@@ -229,46 +227,139 @@
     measurementId: "G-EELB1J45HD"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // ❗ If already logged in, show alert only (no redirect)
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      alert("You are already registered. Please login.");
-      // No redirect, user stays on register page
-    }
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
+  const countryInput = document.getElementById("country");
+  const verificationCode = document.getElementById("verificationCode");
+  const sendCodeBtn = document.getElementById("sendCodeBtn");
+  const registerBtn = document.getElementById("registerBtn");
+  const passwordError = document.getElementById("passwordError");
+  const togglePassword = document.getElementById("togglePassword");
+  const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+
+  let otpCode = "";
+
+  // Password show/hide
+  togglePassword.addEventListener("click", () => {
+    const isVisible = passwordInput.type === "text";
+    passwordInput.type = isVisible ? "password" : "text";
+    togglePassword.src = isVisible ? "/images/eye1.png" : "/images/eye2.png";
   });
 
-  // ✅ Handle registration form submission
-  const form = document.getElementById("register-form");
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  toggleConfirmPassword.addEventListener("click", () => {
+    const isVisible = confirmPasswordInput.type === "text";
+    confirmPasswordInput.type = isVisible ? "password" : "text";
+    toggleConfirmPassword.src = isVisible ? "/images/eye1.png" : "/images/eye2.png";
+  });
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+  // Referral param from URL
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get("ref");
+  if (ref && /^\d+$/.test(ref)) {
+    document.getElementById("refText").innerText = ref;
+    document.getElementById("referralInput").value = ref;
+    document.getElementById("referralSection").style.display = "block";
+  }
+
+  // OTP send
+  sendCodeBtn.addEventListener("click", () => {
+    const email = emailInput.value.trim();
+    otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    sendCodeBtn.disabled = true;
+    sendCodeBtn.classList.remove("active");
+    sendCodeBtn.textContent = "Sending...";
+
+    emailjs.send("service_tsq6gdn", "template_47t3r9u", {
+      to_email: email,
+      code: otpCode
+    }, "4olTZxiOxAHKbysTd").then(() => {
+      alert("✅ OTP sent to your email.");
+      let timeLeft = 120;
+      const timer = setInterval(() => {
+        timeLeft--;
+        sendCodeBtn.textContent = timeLeft > 0 ? `${timeLeft}s` : "Send Code";
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          sendCodeBtn.disabled = false;
+          sendCodeBtn.classList.add("active");
+        }
+      }, 1000);
+    }).catch((error) => {
+      alert("Failed to send code: " + error.text);
+      sendCodeBtn.disabled = false;
+      sendCodeBtn.classList.add("active");
+      sendCodeBtn.textContent = "Send Code";
+    });
+  });
+
+  // Validation
+  function validateForm() {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const confirmPassword = confirmPasswordInput.value.trim();
+    const code = verificationCode.value.trim();
+    const country = countryInput.value;
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const allFilled = email && password && confirmPassword && code && country;
+    const isPasswordValid = password.length >= 6;
+    const isMatch = password === confirmPassword;
+    const isCodeValid = code === otpCode;
+
+    passwordError.style.display = (password.length > 0 && !isPasswordValid) ? "block" : "none";
+    sendCodeBtn.disabled = !isEmailValid;
+    sendCodeBtn.classList.toggle("active", isEmailValid);
+
+    const valid = allFilled && isPasswordValid && isMatch && isCodeValid;
+    registerBtn.disabled = !valid;
+    registerBtn.classList.toggle("enabled", valid);
+    registerBtn.style.cursor = valid ? "pointer" : "not-allowed";
+  }
+
+  [emailInput, passwordInput, confirmPasswordInput, verificationCode, countryInput].forEach(input => {
+    input.addEventListener("input", validateForm);
+  });
+
+  // ✅ Registration with referralCode generation
+  registerBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const refId = document.getElementById("referralInput").value || null;
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      const referralCode = user.uid.slice(0, 6);
-      localStorage.setItem("referralCode", referralCode);
-      localStorage.setItem("userEmail", email);
+      // ✅ Generate referral code from UID
+      const referralCode = Math.floor(10000000 + Math.random() * 90000000).toString();
+      localStorage.setItem("referral_code", referralCode);
 
-      await setDoc(doc(db, "users", user.uid), {
+      await sendEmailVerification(user);
+      alert("Verification email sent. Please check your Gmail.");
+
+      await addDoc(collection(db, "users"), {
         email: email,
-        referralCode: referralCode
+        uid: user.uid,
+        referralCode: referralCode,
+        referralBy: refId || null,
+        createdAt: new Date()
       });
 
-      alert("Registration successful!");
-      window.location.replace("index.html");
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("referralBy", refId || "");
+
+      window.location.href = "index.html";
     } catch (error) {
-      alert(error.message);
+      alert("Registration error: " + error.message);
     }
   });
+
+  validateForm();
 </script>
 </body>  
     </html>
