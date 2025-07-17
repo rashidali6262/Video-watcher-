@@ -5,16 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login</title>
   <style>
-      * {
+    * {
       font-family: 'Georgia', Tahoma, Geneva, Verdana, sans-serif;
     }
-
     body {
       font-family: 'Georgia';
       background-color: #A80D32;
       direction: ltr;
     }
-
     .header-bar {
       position: fixed;
       top: 0;
@@ -30,7 +28,6 @@
       align-items: center;
       justify-content: center;
     }
-
     .back-button {
       position: absolute;
       left: -130px;
@@ -46,7 +43,6 @@
       outline: none;
       border: none;
     }
-
     .container {
       max-width: 400px;
       margin-top: 60px;
@@ -54,18 +50,15 @@
       padding: 20px;
       border-radius: 6px;
     }
-
     .banner-image {
       width: 70%;
       border-radius: 10px;
       margin-left: 15%;
     }
-
     h2 {
       text-align: center;
       margin-bottom: 20px;
     }
-
     .register {
       text-align: center;
       -webkit-tap-highlight-color: transparent
@@ -74,17 +67,14 @@
       color: #007BFF;
       text-decoration: none;
     }
-
     label {
       display: block;
       margin-top: 15px;
     }
-
     .password-wrapper {
       position: relative;
       width: 100%;
     }
-
     .eye-icon {
       position: absolute;
       top: 57%;
@@ -95,7 +85,6 @@
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-
     input, select, button {
       width: 100%;
       padding: 10px;
@@ -105,12 +94,10 @@
       border-radius: 5px;
       background: #D1D2DD;
     }
-
     input:focus, select:focus {
       outline: none;
       border: 1px solid #ccc;
     }
-
     #loginBtn {
       background-color: #888;
       color: white;
@@ -121,12 +108,10 @@
       display: block;
       -webkit-tap-highlight-color: transparent;
     }
-
     #loginBtn.enabled {
       background-color: #A80D32;
       cursor: pointer;
     }
-
     .bottom-line {
       margin-top: 20px;
       text-align: center;
@@ -137,7 +122,6 @@
       word-spacing: 5px;
       -webkit-tap-highlight-color: transparent
     }
-
     #passwordError {
       color: #C71515;
       font-size: 0.8em;
@@ -154,9 +138,9 @@
   </div>
 
   <div class="container">
-    <img src="/banner.png" alt="Banner" class="banner-image" />
+    <img src="/images/banner.png" alt="Banner" class="banner-image" />
     <h2>Welcome back.</h2>
-    
+
     <div class="register">
       Don't have an account? <a href="register.html" class="signup-link">Sign Up&gt;</a>
     </div>
@@ -168,7 +152,7 @@
       <label for="password">Password</label>
       <div class="password-wrapper">
         <input type="password" id="password" placeholder="Enter password" />
-        <img src="/eye1.png" id="togglePassword" class="eye-icon" />
+        <img src="/images/eye1.png" id="togglePassword" class="eye-icon" />
       </div>
       <div id="passwordError">Password must be at least 6 characters</div>
     </div>
@@ -208,7 +192,7 @@
     togglePassword.addEventListener("click", () => {
       passwordVisible = !passwordVisible;
       passwordInput.type = passwordVisible ? "text" : "password";
-      togglePassword.src = passwordVisible ? "/eye2.png" : "/eye1.png";
+      togglePassword.src = passwordVisible ? "/images/eye2.png" : "/images/eye1.png";
     });
 
     function validateForm() {
@@ -248,9 +232,8 @@
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // ✅ Email verified check removed
         localStorage.setItem("userEmail", email);
-        window.location.href = "index.html"; // ✅ redirect after login
+        window.location.replace("index.html");  // 🔒 Safe redirect (blocks back button)
 
       } catch (error) {
         if (error.code === "auth/user-not-found") {
