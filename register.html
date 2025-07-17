@@ -353,7 +353,7 @@
       localStorage.setItem("userEmail", email);
       localStorage.setItem("referralBy", refId || "");
 
-      window.location.replace = ("index.html");
+      window.location.replace("index.html");
     } catch (error) {
       alert("Registration error: " + error.message);
     }
