@@ -216,9 +216,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
   import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-if (localStorage.getItem("userEmail")) {
-  window.location.replace("index.html");
-}
+
   const firebaseConfig = {
     apiKey: "AIzaSyAjC2opLqcaaRACpT_FcrnOsysH-7E7PK8",
     authDomain: "referral-id-3772a.firebaseapp.com",
