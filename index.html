@@ -367,6 +367,14 @@
   <div class="version">
     Version number: <strong>V2.3.1</strong>
   </div>
-
+<script>
+  // Prevent going back to register.html or login.html
+  if (window.history && window.history.pushState) {
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      window.history.pushState(null, "", window.location.href);
+    };
+  }
+</script>
 </body>
 </html>
