@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Me</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Georgia', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding-bottom: 100px;
+      background: #f4f4f4;
+      position: relative;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 45px;
+      background-color: #A80D32;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: 400;
+      z-index: 1000;
+    }
+
+    .color-sheet {
+      position: relative;
+      margin-top: 45px;
+      width: 100%;
+      height: 170px;
+      border-radius: 0px 0px 10px 10px;
+      background-color: #A80D32;
+      z-index: 1;
+    }
+
+    .profile-box {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: white;
+    }
+
+    .circle-container {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      background-color: white;
+    }
+
+    .circle-container img {
+      width: 130%;
+      height: 130%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .profile-info .id {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .profile-info .email {
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .balance-card {
+      position: absolute;
+      top: 120px;
+      left: 50%;
+      margin-top: -30px;
+      transform: translateX(-50%);
+      width: 85%;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      padding: 15px;
+      z-index: 10;
+    }
+
+    .balance-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .balance-top .info {
+      font-size: 15px;
+    }
+
+    .balance-top .amount {
+      font-size: 20px;
+      color: #A80D32;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .withdraw-btn {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: bold;
+      color: #A80D32;
+      background-color: #eaf5ee;
+      padding: 5px 10px;
+      margin-left: 100px;
+      border-radius: 12px;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .balance-bottom {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .balance-bottom div {
+      text-align: left;
+    }
+
+    .balance-bottom .withdraw {
+      font-size: 12px;
+    }
+
+    .balance-bottom .amount {
+      color: #A80D32;
+      font-weight: bold;
+    }
+
+    .coin-img {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .arrow-icon {
+      font-size: 20px;
+      color: #A80D32;
+      margin-top: 14px;
+      margin-left: -35px;
+    }
+
+    .version {
+      text-align: center;
+      color: gray;
+      font-size: 13px;
+      margin: 25px 0 10px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid #ddd;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+      height: 50px;
+    }
+
+    .bottom-nav a {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      color: #777;
+      font-size: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .bottom-nav a i {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
+      transition: transform 0.3s;
+    }
+
+    .bottom-nav a:hover,
+    .bottom-nav a.active {
+      color: #A80D32;
+      font-weight: bold;
+    }
+
+    .bottom-nav a:hover i {
+      transform: scale(1.2);
+    }
+
+    .earning-section {
+      width: 86%;
+      margin: 100px auto 20px;
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(10, 10, 10, 0.15);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .earning-header {
+      display: flex;
+      gap: 20px;
+      font-weight: bold;
+      font-size: 16px;
+      padding-left: 10px;
+      position: relative;
+    }
+
+    .earning-header div {
+      cursor: pointer;
+      position: relative;
+      color: #444;
+    }
+
+    .earning-header .active-tab {
+      color: #A80D32;
+    }
+
+    .earning-header .active-tab::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 10px;
+      width: 0;
+      height: 0;
+      transform: rotate(180deg);
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 10px solid #A80D32;
+    }
+
+    .green-table {
+      border: 5px solid #A80D32;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+
+    .green-table table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 14px;
+      table-layout: fixed;
+    }
+
+    .green-table td {
+      padding: 6px;
+      width: 50%;
+    }
+
+    .green-table tr:not(:last-child) td {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .green-table td:first-child {
+      border-right: 1px solid #ccc;
+    }
+
+    .settings-section {
+      width: 92%;
+      margin: 0 auto 20px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .settings-section a {
+      text-decoration: none;
+    }
+
+    .setting-item {
+      background: white;
+      border-radius: 5px;
+      padding: 0 15px;
+      margin-bottom: 10px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      height: 50px;
+    }
+
+    .setting-item i {
+      color: #A80D32;
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .setting-item span {
+      flex: 1;
+      margin-left: 10px;
+    }
+
+    .setting-item .arrow {
+      color: #888;
+      font-size: 14px;
+      margin-left: auto;
+    }
+
+    .logout {
+      display: flex;
+      justify-content: center;
+    }
+
+    .logout-btn {
+      background: #A80D32;
+      border-radius: 5px;
+      padding: 0 15px;
+      margin-top: 10px;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      display: flex;
+      width: 190px;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+    }
+
+    .logout-btn i {
+      margin-right: 8px;
+    }
+
+    .client-version {
+      text-align: center;
+      color: green;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header"><h5>Me</h5></header>
+
+  <div class="balance-card">
+    <div class="balance-top">
+      <div>
+        <div class="info">Account balance(Rs)</div>
+        <div class="amount" id="accountBalance">0.00</div>
+        <a class="withdraw-btn" href="withdraw.html">Withdraw <i class="fas fa-chevron-right"></i></a>
+      </div>
+      <img src="/images/coin.png" alt="coins" class="coin-img">
+    </div>
+    <div class="balance-bottom">
+      <div>
+        <div class="amount">0.00</div>
+        <div class="withdraw">Withdrawal Review</div>
+      </div>
+      <div>
+        <div class="amount">0.00</div>
+        <div class="withdraw">Withdraw Success</div>
+      </div>
+      <div><i class="fas fa-chevron-circle-right arrow-icon"></i></div>
+    </div>
+  </div>
+
+  <div class="color-sheet">
+    <div class="profile-box">
+      <div class="circle-container">
+        <img src="/images/profile.jpeg" alt="Profile">
+      </div>
+      <div class="profile-info">
+        <div class="id" id="userId">ID:</div>
+        <div class="email" id="userEmail">Email:</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="earning-section">
+    <div class="earning-header">
+      <div id="todayTab" class="active-tab">Today</div>
+      <div id="totalTab">Total</div>
+    </div>
+    <div class="green-table">
+      <table>
+        <tr><td>Video Income</td><td>0.00</td></tr>
+        <tr><td>Ads Income</td><td>0.00</td></tr>
+        <tr><td>Team Bonus</td><td>0.00</td></tr>
+        <tr><td>Other</td><td>0.00</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <a href="wallet.html">
+      <div class="setting-item">
+        <i class="fas fa-wallet"></i>
+        <span>Receiving account</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </div>
+    </a>
+    <a href="withdraw.html">
+      <div class="setting-item">
+        <i class="fas fa-paper-plane"></i>
+        <span>Initiate withdrawal</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </div>
+    </a>
+    <a href="funddetails.html">
+      <div class="setting-item">
+        <i class="fas fa-chart-line"></i>
+        <span>Revenue record</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </div>
+    </a>
+    <a href="withdraw-record.html">
+      <div class="setting-item">
+        <i class="fas fa-list-alt"></i>
+        <span>Withdrawal record</span>
+        <i class="fas fa-chevron-right arrow"></i>
+      </div>
+    </a>
+  </div>
+
+  <div class="logout" onclick="logoutUser()">
+    <div class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i> Log out
+    </div>
+  </div>
+
+  <div class="version">
+    Version number: <strong>V2.3.1</strong>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="index.html"><i class="fas fa-home"></i>Home</a>
+    <a href="task.html"><i class="fas fa-tasks"></i>Tasks</a>
+    <a href="invite.html"><i class="fas fa-user-plus"></i>Invite</a>
+    <a href="team.html"><i class="fas fa-users"></i>Team</a>
+    <a href="me.html" class="active"><i class="fas fa-user"></i>Me</a>
+  </div>
+
+  <script>
+    const todayTab = document.getElementById("todayTab");
+    const totalTab = document.getElementById("totalTab");
+
+    todayTab.addEventListener("click", () => {
+      todayTab.classList.add("active-tab");
+      totalTab.classList.remove("active-tab");
+    });
+
+    totalTab.addEventListener("click", () => {
+      totalTab.classList.add("active-tab");
+      todayTab.classList.remove("active-tab");
+    });
+
+    function logoutUser() {
+      window.location.href = "login.html";
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get("ref");
+    if (refCode) {
+      document.getElementById("userId").innerText = "ID: " + refCode;
+    }
+
+    const storedEmail = localStorage.getItem("userEmail");
+    if (storedEmail) {
+      document.getElementById("userEmail").innerText = "Email: " + storedEmail;
+    }
+
+    // Show Account Balance
+    const totalBalance = localStorage.getItem("accountBalance") || "0.00";
+    document.getElementById("accountBalance").textContent = totalBalance;
+
+    // Load Earnings Breakdown
+    const totalVideo = parseFloat(localStorage.getItem("videoIncome")) || 0;
+    const totalAds = parseFloat(localStorage.getItem("adsIncome")) || 0;
+    const totalTeam = parseFloat(localStorage.getItem("teamBonus")) || 0;
+    const totalOther = parseFloat(localStorage.getItem("otherIncome")) || 0;
+
+    const rows = document.querySelectorAll(".green-table td:nth-child(2)");
+    rows[0].textContent = totalVideo.toFixed(2);
+    rows[1].textContent = totalAds.toFixed(2);
+    rows[2].textContent = totalTeam.toFixed(2);
+    rows[3].textContent = totalOther.toFixed(2);
+  </script>
+</body>
+</html>
