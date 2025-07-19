@@ -473,11 +473,20 @@
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get("ref");
-    if (refCode) {
-      document.getElementById("userId").innerText = "ID: " + refCode;
-    }
+    // 1. Check if referral code is in URL
+const urlParams = new URLSearchParams(window.location.search);
+const refCode = urlParams.get("ref");
 
+if (refCode) {
+  // Save in localStorage if not already saved
+  localStorage.setItem("referred_by", refCode);
+}
+
+// 2. Get referral from localStorage
+const storedRef = localStorage.getItem("referred_by");
+if (storedRef) {
+  document.getElementById("userId").innerText = "ID: " + storedRef;
+}
     const storedEmail = localStorage.getItem("userEmail");
     if (storedEmail) {
       document.getElementById("userEmail").innerText = "Email: " + storedEmail;
